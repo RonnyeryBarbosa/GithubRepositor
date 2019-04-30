@@ -8,8 +8,8 @@ import com.google.gson.annotations.SerializedName
  */
 class RootResponseList<T>(
 
-    @SerializedName("item")
-    val data: T? = null,
+    @SerializedName("items")
+    val data: List<T>? = null,
 
     @SerializedName("incomplete_results")
     val incopleteResults: Boolean,

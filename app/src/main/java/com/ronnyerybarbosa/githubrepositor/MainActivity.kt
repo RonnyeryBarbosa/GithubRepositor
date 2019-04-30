@@ -1,23 +1,43 @@
 package com.ronnyerybarbosa.githubrepositor
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.view.View
 import com.liketapp.network.RetrofitBuilder
+import com.ronnyerybarbosa.githubrepositor.data.repository.Repository
 import com.ronnyerybarbosa.githubrepositor.network.ApiService
-import com.ronnyerybarbosa.githubrepositor.service.rxjava.RxBus
-import com.ronnyerybarbosa.githubrepositor.service.rxjava.RxEvent
-import com.ronnyerybarbosa.githubrepositor.ui.list.ListRepositorPresenter
-import com.ronnyerybarbosa.githubrepositor.ui.list.ListRepositorPresenterImpl
-import com.ronnyerybarbosa.githubrepositor.ui.list.ListRepositorView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorPresenter
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorPresenterImpl
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorView
+import com.ronnyerybarbosa.githubrepositor.ui.adapters.RepositorItemAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ListRepositorView {
+
+
+    override fun onDataStarted()
+    {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun onDataCompleted()
+    {
+        progressBar.visibility = View.GONE
+
+    }
+
+
+    override fun onListRepositories(repositories: List<Repository>)
+    {
+        list_repo.layoutManager = LinearLayoutManager(this)
+        list_repo.adapter = RepositorItemAdapter(repositories, this)
+
+    }
+
 
     lateinit var listRepositorPresenterImpl: ListRepositorPresenter
 
@@ -29,6 +49,8 @@ class MainActivity : AppCompatActivity(), ListRepositorView {
         listRepositorPresenterImpl = getPresenter()
 
         listRepositorPresenterImpl.loadData()
+
+
 
 
 //        val service = RetrofitBuilder().createService(ApiService::class.java)
@@ -64,6 +86,7 @@ class MainActivity : AppCompatActivity(), ListRepositorView {
 
 
     }
+
 
     fun getPresenter(): ListRepositorPresenter
     {

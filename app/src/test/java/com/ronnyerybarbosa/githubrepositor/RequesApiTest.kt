@@ -1,17 +1,17 @@
 package com.ronnyerybarbosa.githubrepositor
 
 import com.liketapp.network.RetrofitBuilder
+import com.ronnyerybarbosa.githubrepositor.data.repository.DataRepository
+import com.ronnyerybarbosa.githubrepositor.data.repository.Repository
 import com.ronnyerybarbosa.githubrepositor.data.response.ResponseRequest
 import com.ronnyerybarbosa.githubrepositor.network.ApiService
-import com.ronnyerybarbosa.githubrepositor.ui.list.ListRepositorPresenterImpl
-import com.ronnyerybarbosa.githubrepositor.ui.list.ListRepositorView
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorPresenterImpl
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorView
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -48,13 +48,13 @@ class RequesApiTest {
     @Test
     fun fetchValidDataShouldLoadIntoView()
     {
-        val d: ResponseRequest = ResponseRequest("")
+        val d: DataRepository = DataRepository(items = listOf(Repository(),Repository()))
 
 //a
         `when`(apiService.request())
             .thenReturn(Observable.just(d))
 
-        System.out.println(d.response);
+        System.out.println(d.totalCount);
 
 
         val mainPresenter = ListRepositorPresenterImpl(

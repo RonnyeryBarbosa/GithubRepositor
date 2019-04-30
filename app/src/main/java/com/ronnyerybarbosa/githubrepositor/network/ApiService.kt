@@ -1,5 +1,6 @@
 package com.ronnyerybarbosa.githubrepositor.network
 
+import com.ronnyerybarbosa.githubrepositor.data.repository.DataRepository
 import com.ronnyerybarbosa.githubrepositor.data.response.ResponseRequest
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -14,7 +15,7 @@ interface ApiService
 {
 
     @GET("repositories?q=language:swift&sort=stars")
-    fun request() : Observable<ResponseRequest>
+    fun request() : Observable<DataRepository>
 
 
 }

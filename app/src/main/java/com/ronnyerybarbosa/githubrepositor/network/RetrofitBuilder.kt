@@ -19,7 +19,7 @@ class RetrofitBuilder
     /**
      * URL REQUEST
      */
-    private  var BASE_URL = "https://api.github.com/searcrh/"
+    private  var BASE_URL = "https://api.github.com/search/"
 
     /**
      * Init Client

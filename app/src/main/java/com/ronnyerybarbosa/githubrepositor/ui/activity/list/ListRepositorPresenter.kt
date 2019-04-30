@@ -1,4 +1,4 @@
-package com.ronnyerybarbosa.githubrepositor.ui.list
+package com.ronnyerybarbosa.githubrepositor.ui.activity.list
 
 interface ListRepositorPresenter
 {

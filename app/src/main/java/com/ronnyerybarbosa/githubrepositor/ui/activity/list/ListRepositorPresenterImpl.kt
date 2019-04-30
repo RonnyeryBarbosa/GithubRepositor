@@ -1,12 +1,17 @@
-package com.ronnyerybarbosa.githubrepositor.ui.list
+package com.ronnyerybarbosa.githubrepositor.ui.activity.list
 
 import android.annotation.SuppressLint
+import android.util.Log
+import com.google.gson.reflect.TypeToken
+import com.ronnyerybarbosa.githubrepositor.data.repository.DataRepository
+import com.ronnyerybarbosa.githubrepositor.data.repository.Repository
+import com.ronnyerybarbosa.githubrepositor.data.response.RootResponseList
 import com.ronnyerybarbosa.githubrepositor.network.ApiService
+import com.ronnyerybarbosa.githubrepositor.utils.convertJsonInObject
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.logging.Logger
 
 
 class ListRepositorPresenterImpl(val apiService: ApiService,
@@ -21,6 +26,9 @@ class ListRepositorPresenterImpl(val apiService: ApiService,
     {
         compositeDisposable.clear()
 
+        view.onDataStarted()
+
+
 
 
         val a =  apiService
@@ -30,12 +38,32 @@ class ListRepositorPresenterImpl(val apiService: ApiService,
             .subscribe(
                 { response ->
 
+
+                    view.onDataCompleted()
+
+                  //  Log.d("repositories", response.totalCount.toString())
+
+
                     System.out.println("sucesso");
+
+                    System.out.println("${response.items.size}");
+
+
+
+                    val type = object : TypeToken<RootResponseList<Repository>>() {}.type
+
+//                    val data = response.response?.let { convertJsonInObject<Repository>(it, type) }
+//
+//                    Log.d("repositories", "${data!!.incopleteResults}")
+//
+//                    Log.d("repositories", "${data?.data?.size}")
+                    view.onListRepositories(response.items)
 
 
                 },
                 { e ->
 
+                    view.onDataCompleted()
 
                     System.out.println("error");
 

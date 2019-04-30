@@ -6,4 +6,6 @@ package com.ronnyerybarbosa.githubrepositor.network
 object EndPoints
 {
 
+    const val REPO = "repositories?"
+
 }

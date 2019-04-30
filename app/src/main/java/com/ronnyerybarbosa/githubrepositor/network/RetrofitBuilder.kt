@@ -19,7 +19,7 @@ class RetrofitBuilder
     /**
      * URL REQUEST
      */
-    private  var BASE_URL = "https://api.github.com/search/repositories?q=language:swift&sort=stars"
+    private  var BASE_URL = "https://api.github.com/searcrh/"
 
     /**
      * Init Client
@@ -87,4 +87,11 @@ class RetrofitBuilder
         return retrofit
     }
 
+    /**
+     * Sevice
+     */
+    fun <T> createService(service: Class<T>): T
+    {
+        return retrofit.create(service)
+    }
 }

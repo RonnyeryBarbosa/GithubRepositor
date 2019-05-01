@@ -3,10 +3,9 @@ package com.ronnyerybarbosa.githubrepositor
 import com.liketapp.network.RetrofitBuilder
 import com.ronnyerybarbosa.githubrepositor.data.repository.DataRepository
 import com.ronnyerybarbosa.githubrepositor.data.repository.Repository
-import com.ronnyerybarbosa.githubrepositor.data.response.ResponseRequest
 import com.ronnyerybarbosa.githubrepositor.network.ApiService
-import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorPresenterImpl
-import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositorView
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositoriesPresenterImpl
+import com.ronnyerybarbosa.githubrepositor.ui.activity.list.ListRepositoriesView
 import io.reactivex.Observable
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
@@ -14,27 +13,25 @@ import org.junit.Test
 
 import org.junit.Before
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.Mockito.`when`
-
-
-
-
-
 
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Test the API Request
  *
- * See [testing documentation](http://d.android.com/tools/testing).
+ * @author [Ronnyery Barbosa](ronnyerybarbosa@gmail.com)
+ *
  */
-class RequesApiTest {
+class RequesApiTest
+{
 
     @Mock
     var apiService: ApiService=  RetrofitBuilder().createService(ApiService::class.java)
 
     @Mock
-    lateinit var view: ListRepositorView
+    lateinit var view: ListRepositoriesView
 
     @Before
     fun setup()
@@ -42,22 +39,19 @@ class RequesApiTest {
         MockitoAnnotations.initMocks(this)
 
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline()}
-
     }
 
     @Test
-    fun fetchValidDataShouldLoadIntoView()
+    fun loadIntoViewSecesso()
     {
-        val d: DataRepository = DataRepository(items = listOf(Repository(),Repository()))
+        val data = DataRepository(items = mutableListOf(Repository(),Repository()))
 
-//a
+
         `when`(apiService.request())
-            .thenReturn(Observable.just(d))
-
-        System.out.println(d.totalCount);
+            .thenReturn(Observable.just(data))
 
 
-        val mainPresenter = ListRepositorPresenterImpl(
+        val mainPresenter = ListRepositoriesPresenterImpl(
             this.apiService,
             Schedulers.trampoline(),
             Schedulers.trampoline(),
@@ -65,6 +59,36 @@ class RequesApiTest {
         )
 
         mainPresenter.loadData()
+
+        val inOrder = Mockito.inOrder(view)
+        inOrder.verify(view, times(1)).onDataStarted()
+        inOrder.verify(view, times(1)).onDataCompleted()
+        inOrder.verify(view, times(1)).onListRepositories(data.items)
+
+    }
+
+    @Test
+    fun loadViewErro()
+    {
+        val exception: Exception = Exception()
+
+
+        `when`(apiService.request())
+            .thenReturn(Observable.error<DataRepository>(exception))
+
+        val mainPresenter = ListRepositoriesPresenterImpl(
+            this.apiService,
+            Schedulers.trampoline(),
+            Schedulers.trampoline(),
+            this.view
+        )
+
+        mainPresenter.loadData()
+
+        val inOrder = Mockito.inOrder(view)
+        inOrder.verify(view, times(1)).onDataStarted()
+        inOrder.verify(view, times(1)).onDataError(exception)
+        verify(view, never()).onDataCompleted()
 
     }
 

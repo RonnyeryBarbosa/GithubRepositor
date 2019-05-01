@@ -2,9 +2,12 @@ package com.ronnyerybarbosa.githubrepositor.ui.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ronnyerybarbosa.githubrepositor.data.repository.Repository
@@ -12,7 +15,45 @@ import kotlinx.android.synthetic.main.item_repositor.view.*
 import java.text.SimpleDateFormat
 
 
-class RepositorItemAdapter(val postItems: List<Repository>, val context: Context) : RecyclerView.Adapter<RepositorItemAdapter.ViewHolder>() {
+class RepositorItemAdapter(var repositories: MutableList<Repository>, val context: Context, val listener: ItemClickListener) : RecyclerView.Adapter<RepositorItemAdapter.ViewHolder>(), Filterable {
+
+
+    private var repositoriesSearchList: List<Repository>
+
+    init {
+        repositoriesSearchList = repositories
+    }
+
+    override fun getFilter(): Filter
+    {
+
+        return object : Filter() {
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                val charString = charSequence.toString()
+                if (charString.isEmpty()) {
+                    repositoriesSearchList = repositories
+                } else {
+                    val filteredList = ArrayList<Repository>()
+                    for (row in repositories)
+                    {
+                        if (row.name.toLowerCase().startsWith(charString.toLowerCase())) {
+                            filteredList.add(row)
+                        }
+                    }
+                    repositoriesSearchList = filteredList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = repositoriesSearchList
+                return filterResults
+            }
+            override fun publishResults(charSequence: CharSequence, filterResults: FilterResults)
+            {
+                repositoriesSearchList = filterResults.values as ArrayList<Repository>
+                notifyDataSetChanged()
+            }
+        }
+
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,32 +63,36 @@ class RepositorItemAdapter(val postItems: List<Repository>, val context: Context
     }
 
     override fun getItemCount(): Int {
-        return postItems.size
+        return repositoriesSearchList?.size?: 0
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder?.itemView.txt_name_repo.text = postItems[position].name
-        holder.itemView.txt_name_user.text = postItems[position].owner?.login
-        holder?.itemView.txt_rating.text = postItems[position].stars.toString()
-        holder?.itemView.txt_create.text = "criado: ${getDate(postItems[position].create)}"
-        holder?.itemView.txt_update.text = "atualizado: ${getDate(postItems[position].update)}"
+        holder?.itemView.txt_name_repo.text = repositoriesSearchList[position].name
+        holder.itemView.txt_name_user.text = repositoriesSearchList[position].owner?.login
+        holder?.itemView.txt_rating.text = repositoriesSearchList[position].stars.toString()
+        holder?.itemView.txt_create.text = "criado: ${getDate(repositoriesSearchList[position].create)}"
+        holder?.itemView.txt_update.text = "atualizado: ${getDate(repositoriesSearchList[position].update)}"
 
 
 
 
 
         Glide.with(context)
-            .load( postItems[position].owner?.avatar)
+            .load(repositoriesSearchList[position].owner?.avatar)
             .apply(RequestOptions.circleCropTransform())
             .into(holder.itemView.image_user)
 
-        //holder?.itemView.tv_post_body.text = postItems.get(position).body
     }
 
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    {
+        init {
+            view.setOnClickListener {
+                listener.onItemClicked(repositories[adapterPosition])
+            }
+        }
     }
 
 
@@ -62,5 +107,21 @@ class RepositorItemAdapter(val postItems: List<Repository>, val context: Context
             return e.toString()
         }
     }
+
+//    fun setFilter(providersFilter: MutableList<Repository>)
+//    {
+//        repositories = mutableListOf()
+//        repositories.addAll(providersFilter)
+//        notifyDataSetChanged()
+//    }
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
+    }
+
+    interface ItemClickListener {
+        fun onItemClicked(repository: Repository)
+    }
+
 
 }

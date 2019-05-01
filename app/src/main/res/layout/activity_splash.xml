@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <!--content logo-->
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cont"
+        android:layout_gravity="top"
+        android:orientation="vertical">
+
+        <!--logo-->
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/sphash_logo"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_git"/>
+
+        <!--description-->
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/splash_descript"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:text="@string/app_name"/>
+
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+
+</android.support.design.widget.CoordinatorLayout>

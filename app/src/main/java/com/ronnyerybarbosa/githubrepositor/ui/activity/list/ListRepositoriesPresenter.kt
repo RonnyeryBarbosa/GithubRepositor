@@ -1,13 +1,12 @@
 package com.ronnyerybarbosa.githubrepositor.ui.activity.list
 
-interface ListRepositorPresenter
+interface ListRepositoriesPresenter
 {
 
     fun loadData()
 
-    fun subscribe()
-
     fun unsubscribe()
 
     fun onDestroy()
+
 }

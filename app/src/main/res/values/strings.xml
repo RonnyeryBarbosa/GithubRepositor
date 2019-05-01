@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">GitHubRepositor</string>
+    <string name="app_name">Github Repositório</string>
+
+    <string name="error">Não foi possível carregar o conteúdo</string>
+
+    <string name="repository">Repositório</string>
+
+    <string name="search">Pesquisar Repositório</string>
+
+    <string name="profile">Perfil</string>
+
+
 </resources>

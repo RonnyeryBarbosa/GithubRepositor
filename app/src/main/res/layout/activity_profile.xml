@@ -152,7 +152,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView15"
                 app:layout_constraintStart_toStartOf="@+id/textView21"/>
         <TextView
-                android:text="Destrito Federal"
+                android:text="Distrito Federal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView18"
